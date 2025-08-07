@@ -8,6 +8,11 @@
   const upscaledImg = document.getElementById('upscaledImg');
   const downloadBtn = document.getElementById('downloadBtn');
   const loadingDiv = document.getElementById('loading');
+    // Hide loading and result sections initially
+  loadingDiv.hidden = true;
+  loadingDiv.style.display = 'none';
+  resultSection.style.display = 'none';
+
 
   // Initialize upscaler instance
   // We'll load a medium-sized model to balance quality and speed
@@ -23,9 +28,13 @@ patchSize: 128,
 
   // Show loading UI
   function showLoading(show) {
-    loadingDiv.hidden = !show;
+  if (show) {
+    loadingDiv.hidden = false;
+    loadingDiv.style.display = 'flex';
+  } else {
+    loadingDiv.hidden = true;
+    loadingDiv.style.display = 'none';
   }
-
   // Handle file input change
   fileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
