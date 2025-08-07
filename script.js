@@ -8,92 +8,84 @@
   const upscaledImg = document.getElementById('upscaledImg');
   const downloadBtn = document.getElementById('downloadBtn');
   const loadingDiv = document.getElementById('loading');
-    // Hide loading and result sections initially
+  // Hide loading and result sections initially
   loadingDiv.hidden = true;
   loadingDiv.style.display = 'none';
   resultSection.style.display = 'none';
 
-
   // Initialize upscaler instance
   // We'll load a medium-sized model to balance quality and speed
-  const upscaler = new Upscaler({
-    // use default model; if default fails, you can specify a path or a built-in name
-    // such as 'esrgan-slim', but default should work across browsers
-    // patch size helps performance for large images
-    
-        model: ESRGANSlim2x,
-patchSize: 128,
-    padding: 2,
-  });
-
-  // Show loading UI
-  function showLoading(show) {
-  if (show) {
-    loadingDiv.hidden = false;
-    loadingDiv.style.display = 'flex';
-  } else {
-    loadingDiv.hidden = true;
-    loadingDiv.style.display = 'none';
+  let upscaler;
+  try {
+    // Try to create an Upscaler instance; rely on default model
+    upscaler = new Upscaler({
+      patchSize: 128,
+      padding: 2,
+    });
+  } catch (e) {
+    console.warn('Upscaler could not be initialized:', e);
+    upscaler = null;
   }
-  // Handle file input change
-  fileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    await processImageFile(file);
-  });
 
-  // Handle drag-and-drop
-  ['dragenter', 'dragover'].forEach(eventName => {
-    uploadArea.addEventListener(eventName, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadArea.classList.add('dragover');
-    });
-  });
-  ['dragleave', 'drop'].forEach(eventName => {
-    uploadArea.addEventListener(eventName, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadArea.classList.remove('dragover');
-    });
-  });
-  uploadArea.addEventListener('drop', async (e) => {
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
-    await processImageFile(file);
-  });
+  // Show/hide loading UI
+  function showLoading(show) {
+    if (show) {
+      loadingDiv.hidden = false;
+      loadingDiv.style.display = 'flex';
+    } else {
+      loadingDiv.hidden = true;
+      loadingDiv.style.display = 'none';
+    }
+  }
 
-  // Convert HEIC to blob using heic2any
+  // Convert HEIC/HEIF to jpeg using heic2any
   async function convertHeicToBlob(file) {
     const blob = await heic2any({ blob: file, toType: 'image/jpeg' });
-    // heic2any returns Blob or array of Blob, handle accordingly
     if (Array.isArray(blob)) {
       return blob[0];
     }
     return blob;
   }
 
+  // Process selected image file
   async function processImageFile(file) {
     try {
       resultSection.style.display = 'none';
       showLoading(true);
       let inputFile = file;
-      // Convert HEIC/HEIF files to JPEG using heic2any
+      // Convert HEIC/HEIF files to JPEG
       if (file.type === 'image/heic' || file.type === 'image/heif') {
         inputFile = await convertHeicToBlob(file);
       }
       // Read file into an image element
       const imageURL = URL.createObjectURL(inputFile);
       originalImg.src = imageURL;
-      // Wait for original image to load
       await originalImg.decode();
-      // Upscale using UpscalerJS
-      const upscaledDataUrl = await upscaler.upscale(originalImg);
+
+      // Upscale using UpscalerJS if available
+      let upscaledDataUrl;
+      if (upscaler && typeof upscaler.upscale === 'function') {
+        upscaledDataUrl = await upscaler.upscale(originalImg);
+      } else {
+        // Fallback: scale the image using canvas
+        const tmpImg = new Image();
+        tmpImg.src = imageURL;
+        await tmpImg.decode();
+        const scaleFactor = 4;
+        const width = tmpImg.naturalWidth * scaleFactor;
+        const height = tmpImg.naturalHeight * scaleFactor;
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(tmpImg, 0, 0, width, height);
+        upscaledDataUrl = canvas.toDataURL();
+      }
+
       upscaledImg.src = upscaledDataUrl;
-      // Set download link
       downloadBtn.href = upscaledDataUrl;
       downloadBtn.download = 'upscaled_' + file.name.replace(/\.[^.]+$/, '.png');
-      // Reveal result section
       resultSection.style.display = 'flex';
     } catch (err) {
       console.error('Error processing image:', err);
@@ -102,4 +94,33 @@ patchSize: 128,
       showLoading(false);
     }
   }
+
+  // Event listeners for file input and drag-and-drop
+  fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    await processImageFile(file);
+  });
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.classList.add('dragover');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.classList.remove('dragover');
+    });
+  });
+
+  uploadArea.addEventListener('drop', async (e) => {
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    await processImageFile(file);
+  });
 })();
