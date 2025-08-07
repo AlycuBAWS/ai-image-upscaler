@@ -15,7 +15,9 @@
     // use default model; if default fails, you can specify a path or a built-in name
     // such as 'esrgan-slim', but default should work across browsers
     // patch size helps performance for large images
-    patchSize: 128,
+    
+        model: DefaultUpscalerJSModel,
+patchSize: 128,
     padding: 2,
   });
 
