@@ -158,3 +158,12 @@ body {
     padding: 30px;
   }
 }
+
+/* Hide default file input */
+.upload-area input[type="file"] {
+  display: none;
+}
+/* Hide result by default */
+.result {
+  display: none;
+}
