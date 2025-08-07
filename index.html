@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Image Upscaler</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Include TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.2.0/dist/tf.min.js"></script>
+  <!-- Include UpscalerJS -->
+  <script src="https://cdn.jsdelivr.net/npm/upscaler@1.13.0/dist/upscaler.min.js"></script>
+  <!-- HEIC decoder -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.3/dist/heic2any.min.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <h1><span class="highlight">FREE</span> AI Image Upscaler</h1>
+    <p>Effortlessly enlarge and enhance low‑resolution images, up to 4× size, while keeping them crisp and sharp.</p>
+  </header>
+
+  <section class="upload-area" id="uploadArea">
+    <input type="file" id="fileInput" accept="image/png, image/jpeg, image/jpg, image/webp, image/heic, image/heif">
+    <label for="fileInput">Upload Image</label>
+    <p>or drop an image here</p>
+    <div id="loading" class="loading" hidden>
+      <div class="spinner"></div>
+      <p>Upscaling, please wait…</p>
+    </div>
+  </section>
+
+  <section class="result" id="resultSection">
+    <div class="image-container">
+      <h2>Original</h2>
+      <img id="originalImg" alt="Original image">
+    </div>
+    <div class="image-container">
+      <h2>Upscaled</h2>
+      <img id="upscaledImg" alt="Upscaled image">
+      <a id="downloadBtn" class="download-btn" download="upscaled.png">Download</a>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
