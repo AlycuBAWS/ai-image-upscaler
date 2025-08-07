@@ -16,7 +16,7 @@
     // such as 'esrgan-slim', but default should work across browsers
     // patch size helps performance for large images
     
-        model: DefaultUpscalerJSModel,
+        model: ESRGANSlim2x,
 patchSize: 128,
     padding: 2,
   });
