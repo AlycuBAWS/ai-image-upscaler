@@ -1,4 +1,5 @@
 /* Base styles */
+
 body {
   margin: 0;
   padding: 0;
@@ -34,6 +35,8 @@ body {
   margin: 0 auto;
   color: #cccccc;
 }
+
+
 
 .upload-area {
   position: relative;
