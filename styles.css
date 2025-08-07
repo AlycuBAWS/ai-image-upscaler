@@ -1,5 +1,4 @@
 /* Base styles */
-
 body {
   margin: 0;
   padding: 0;
@@ -35,8 +34,6 @@ body {
   margin: 0 auto;
   color: #cccccc;
 }
-
-
 
 .upload-area {
   position: relative;
@@ -75,6 +72,11 @@ body {
 .upload-area p {
   margin-top: 16px;
   color: #888888;
+}
+
+/* Hide native file input; users interact with the label instead */
+.upload-area input[type="file"] {
+  display: none;
 }
 
 .loading {
@@ -130,6 +132,15 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+/* Ensure canvases in result adopt similar styling to images */
+.image-container canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  display: block;
+}
+
 .download-btn {
   display: inline-block;
   margin-top: 15px;
@@ -160,13 +171,4 @@ body {
   .upload-area {
     padding: 30px;
   }
-}
-
-/* Hide default file input */
-.upload-area input[type="file"] {
-  display: none;
-}
-/* Hide result by default */
-.result {
-  display: none;
 }

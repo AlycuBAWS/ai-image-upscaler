@@ -3,23 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Image Upscaler</title>
+  <title>Snapchat Dog Filter</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Include TensorFlow.js -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.2.0/dist/tf.min.js"></script>
-  <!-- Include UpscalerJS -->
-  <script src="https://cdn.jsdelivr.net/npm/upscaler@1.13.0/dist/upscaler.min.js"></script>
+  <!-- Include face‑api.js for face detection and landmarks -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
   <!-- HEIC decoder -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.3/dist/heic2any.min.js"></script>
-      <!-- Load default Upscaler model -->
-    <script src="https://cdn.jsdelivr.net/npm/@upscalerjs/default-model@latest/dist/umd/index.min.js"></script>
-      <!-- Load 2x ESRGAN Slim model -->
-    <script src="https://cdn.jsdelivr.net/npm/@upscalerjs/esrgan-slim@latest/dist/umd/2x.min.js"></script>
 </head>
 <body>
   <header class="hero">
-    <h1><span class="highlight">FREE</span> AI Image Upscaler</h1>
-    <p>Effortlessly enlarge and enhance low‑resolution images, up to 4× size, while keeping them crisp and sharp.</p>
+    <h1><span class="highlight">Snapchat</span> Dog Filter</h1>
+    <p>Upload your photo and instantly add cute dog ears and a nose to your face.</p>
   </header>
 
   <section class="upload-area" id="uploadArea">
@@ -28,22 +22,18 @@
     <p>or drop an image here</p>
     <div id="loading" class="loading" hidden>
       <div class="spinner"></div>
-      <p>Upscaling, please wait…</p>
+      <p>Applying filter, please wait…</p>
     </div>
   </section>
 
   <section class="result" id="resultSection">
     <div class="image-container">
-      <h2>Original</h2>
-      <img id="originalImg" alt="Original image">
-    </div>
-    <div class="image-container">
-      <h2>Upscaled</h2>
-      <img id="upscaledImg" alt="Upscaled image">
-      <a id="downloadBtn" class="download-btn" download="upscaled.png">Download</a>
+      <h2>Filtered Image</h2>
+      <canvas id="resultCanvas"></canvas>
+      <a id="downloadBtn" class="download-btn" download="dog-filter.png">Download</a>
     </div>
   </section>
 
-  <script src="script.js?v=33"></script>
+  <script src="script.js"></script>
 </body>
 </html>
